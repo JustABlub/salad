@@ -30,8 +30,6 @@ fn main() -> Result<(), io::Error> {
     //})?;
     let res = run_app(&mut terminal);
 
-    thread::sleep(Duration::from_millis(5000));
-
     // restore terminal
     disable_raw_mode()?;
     execute!(
@@ -48,6 +46,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
     loop {
         terminal.draw(|f| menu::ui(f));
 
+        //TODO see if I can actually quit using q
         if let Event::Key(key) = event::read()? {
             if let KeyCode::Char('q') = key.code {
                 return Ok(())
