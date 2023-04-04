@@ -35,7 +35,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>) {
     let paragraph = Paragraph::new(text).block(block).wrap(Wrap {trim:true});
     f.render_widget(paragraph, chunks[1]);
 }
-//TODO parse and return strings
+
 pub fn grab_apps() -> Vec<String> {
     // Read ./apps/ directory and creates a vector with all files in it
     let paths = fs::read_dir("/home/blub/Projects/rust/salad/src/apps/")
@@ -54,6 +54,7 @@ pub fn grab_apps() -> Vec<String> {
         let stripped = i.split('/').last().unwrap().to_string();
         *i = stripped.split('.').next().unwrap().to_string();
     }
+    // debug statement 
     println!("{:?}", &app_vec);
     return app_vec;
 }
