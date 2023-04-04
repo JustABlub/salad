@@ -1,12 +1,56 @@
-use std::fs;
+use std::{fs, error::Error, io};
+use super::grab_apps;
 use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, Paragraph, Wrap},
+    widgets::{Block, Borders, Paragraph, Wrap, Cell, Row, Table, TableState},
     text::{Spans},
     Frame,
 };
  
+pub struct MenuBar<'a> {
+    state: TableState,
+    items: Vec<Vec<&'a str>>,
+}
+
+impl<'a> MenuBar <'a> {
+    fn new() -> MenuBar<'a> {
+        MenuBar {
+            state: TableState::default(),
+            items: vec![grab_apps::grab_apps()],
+        }
+    }
+    
+    pub fn next(&mut self) {
+        let i = match self.state.selected() {
+            Some(i) => {
+                if i >= self.items.len() - 1 {
+                    0
+                }
+                else {
+                    i + 1
+                }
+            }
+            None => 0,
+        };
+        self.state.selected(Some(i));
+    }
+
+    pub fn previous(&mut self) {
+        let i = match self.state.selected() {
+            Some(i) => {
+                if i == 0 {
+                    self.items.len()
+                } else {
+                    i - 1
+                }
+            }
+            None => 0,
+        };
+        self.state.select(Some(i));
+    }
+}
+
 // Menu function draws the main menu
 pub fn ui<B: Backend>(f: &mut Frame<B>) {
    let chunks = Layout::default()
@@ -26,7 +70,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>) {
     f.render_widget(block, chunks[0]);
     
     let text = vec![
-        Spans::from("Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."),
+        Spans::from("Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.")
     ];
 
     let block = Block::default()
@@ -36,28 +80,6 @@ pub fn ui<B: Backend>(f: &mut Frame<B>) {
     f.render_widget(paragraph, chunks[1]);
 }
 
-pub fn grab_apps() -> Vec<String> {
-    // Read ./apps/ directory and creates a vector with all files in it
-    let paths = fs::read_dir("/home/blub/Projects/rust/salad/src/apps/")
-       .unwrap()
-       .filter_map(|e| e.ok())
-       .map(|e| e.path())
-       .collect::<Vec<_>>();
-    
-    // Filter out and clean up vector so we can return just the app names
-    let mut app_vec = Vec::new();
-    for i in &paths {
-        app_vec.push(i.clone().into_os_string().into_string().unwrap());
-    }
-    println!("{:?}", &app_vec);
-    for i in &mut app_vec {
-        let stripped = i.split('/').last().unwrap().to_string();
-        *i = stripped.split('.').next().unwrap().to_string();
-    }
-    // debug statement 
-    println!("{:?}", &app_vec);
-    return app_vec;
-}
 
 // Just in case I need to check a variable type
 fn print_type_of<T>(_: &T) {

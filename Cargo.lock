@@ -58,6 +58,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
+name = "keycodes"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37a9f5ede1b60d265d3230a5007a142f2171d76612e1511b3c46673a8f7d5bfb"
+
+[[package]]
 name = "libc"
 version = "0.2.140"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -145,6 +151,7 @@ version = "0.1.0"
 dependencies = [
  "crossterm",
  "glob",
+ "keycodes",
  "ratatui",
 ]
 
