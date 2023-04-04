@@ -38,7 +38,7 @@ fn main() -> Result<(), io::Error> {
         DisableMouseCapture
     )?;
     terminal.show_cursor()?;
-    menu::grabApps();
+    menu::grab_apps();
 
     Ok(())
 }
